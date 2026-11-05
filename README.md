@@ -33,6 +33,9 @@ image2ansi [options...] image-file...
 - `-w WIDTH`  
   Specify the output width.
   By default, the current terminal width is used. When output is redirected, no width limit is applied, and the original image width is used.
+- `-gif-from-stdin` Read a GIF image from standard input
+- `-jpg-from-stdin` Read a JPEG image from standard input
+- `-png-from-stdin` Read a PNG image from standard input
 
 ### Supported Image Formats
 
