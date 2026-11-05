@@ -25,9 +25,10 @@ import (
 var (
 	flagTrueColor = flag.Bool("24", false, "Use 24-bit true color")
 
-	flagX     = flag.Int("x", 0, "Image start X (0-based)")
-	flagY     = flag.Int("y", 0, "Image start Y (0-based)")
-	flagWidth = flag.Int("w", 0, "Maximum output width")
+	flagX      = flag.Int("x", 0, "Image start X (0-based)")
+	flagY      = flag.Int("y", 0, "Image start Y (0-based)")
+	flagWidth  = flag.Int("w", 0, "Maximum output width")
+	flagHeight = flag.Int("h", 0, "Maximum output height")
 
 	flagGifFromStdin = flag.Bool("gif-from-stdin", false, "Read a GIF image from standard input")
 	flagPngFromStdin = flag.Bool("png-from-stdin", false, "Read a PNG image from standard input")
@@ -69,6 +70,15 @@ func clippingTermWidth(fd int) func(image.Rectangle) image.Rectangle {
 	return image2ansi.ClippingWidth(width)
 }
 
+func clippingHeight(height int) func(image.Rectangle) image.Rectangle {
+	return func(rec image.Rectangle) image.Rectangle {
+		if rec.Max.Y-rec.Min.Y > height {
+			rec.Max.Y = rec.Min.Y + height
+		}
+		return rec
+	}
+}
+
 func joinClipping(f ...func(image.Rectangle) image.Rectangle) func(image.Rectangle) image.Rectangle {
 	return func(rec image.Rectangle) image.Rectangle {
 		for _, f1 := range f {
@@ -95,6 +105,9 @@ func mains(args []string) error {
 	}
 	if *flagWidth > 0 {
 		clipping = joinClipping(clipping, image2ansi.ClippingWidth(*flagWidth))
+	}
+	if *flagHeight > 0 {
+		clipping = joinClipping(clipping, clippingHeight(*flagHeight))
 	}
 	var pen image2ansi.Pen = image2ansi.Color256
 	if *flagTrueColor {
