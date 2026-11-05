@@ -16,9 +16,49 @@ curl "https://avatars.githubusercontent.com/u/3752189?s=400&u=ea799fc495e6b0c62e
 Install
 -------
 
+### Manual Installation
+
+[Releases](https://github.com/hymkor/go-image2ansi/releases) よりバイナリパッケージをダウンロードして、実行ファイルを展開してください
+
+<!-- go run github.com/hymkor/example-into-readme/cmd/how2install@master ja | -->
+
+### [eget] インストーラーを使う場合 (クロスプラットフォーム)
+
+```sh
+brew install eget        # Unix-like systems
+# or
+scoop install eget       # Windows
+
+cd (YOUR-BIN-DIRECTORY)
+eget hymkor/go-image2ansi
+```
+
+[eget]: https://github.com/zyedidia/eget
+
+### [scoop] インストーラーを使う場合 (Windowsのみ)
+
+```
+scoop install https://raw.githubusercontent.com/hymkor/go-image2ansi/master/go-image2ansi.json
+```
+
+もしくは
+
+```
+scoop bucket add hymkor https://github.com/hymkor/scoop-bucket
+scoop install image2ansi
+```
+
+[scoop]: https://scoop.sh/
+
+### "go install" を使う場合 (要Go言語開発環境)
+
 ```
 go install github.com/hymkor/go-image2ansi/cmd/image2ansi@latest
 ```
+
+`go install` は `$HOME/go/bin` もしくは `$GOPATH/bin` へ実行ファイルを導入するので、`image2ansi` を実行するにはそのディレクトリを `$PATH` に追加する必要があります。
+
+<!-- -->
 
 Usage
 -----

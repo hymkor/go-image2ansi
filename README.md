@@ -16,9 +16,48 @@ curl "https://avatars.githubusercontent.com/u/3752189?s=400&u=ea799fc495e6b0c62e
 Install
 -------
 
+### Manual Installation
+
+Download the binary package from [Releases](https://github.com/hymkor/go-image2ansi/releases) and extract the executable.
+
+<!-- go run github.com/hymkor/example-into-readme/cmd/how2install@master | -->
+
+### Use [eget] installer (cross-platform)
+
 ```sh
+brew install eget        # Unix-like systems
+# or
+scoop install eget       # Windows
+
+cd (YOUR-BIN-DIRECTORY)
+eget hymkor/go-image2ansi
+```
+
+[eget]: https://github.com/zyedidia/eget
+
+### Use [scoop]-installer (Windows only)
+
+```
+scoop install https://raw.githubusercontent.com/hymkor/go-image2ansi/master/image2ansi.json
+```
+
+or
+
+```
+scoop bucket add hymkor https://github.com/hymkor/scoop-bucket
+scoop install image2ansi
+```
+
+[scoop]: https://scoop.sh/
+
+### Use "go install" (requires Go toolchain)
+
+```
 go install github.com/hymkor/go-image2ansi/cmd/image2ansi@latest
 ```
+
+Note: `go install` places the executable in `$HOME/go/bin` or `$GOPATH/bin`, so you need to add this directory to your `$PATH` to run `go-image2ansi`.
+<!-- -->
 
 ## Usage
 
