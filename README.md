@@ -36,6 +36,10 @@ image2ansi [options...] image-file...
   By default, 256 colors are used:
   - `ESC[38;5;{id1}m`
   - `ESC[48;5;{id2}m`
+- `-x X`  
+        Image start X (0-based)
+- `-y Y`  
+        Image start Y (0-based)
 - `-w WIDTH`  
   Specify the output width.
   By default, the current terminal width is used. When output is redirected, no width limit is applied, and the original image width is used.
