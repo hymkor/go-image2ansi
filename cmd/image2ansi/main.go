@@ -23,8 +23,12 @@ import (
 )
 
 var (
-	flagTrueColor = flag.Bool("24", false, "true color")
-	flagWidth     = flag.Int("w", 0, "max width")
+	flagTrueColor = flag.Bool("24", false, "Use 24-bit true color")
+	flagWidth     = flag.Int("w", 0, "Maximum output width")
+
+	flagGifFromStdin = flag.Bool("gif-from-stdin", false, "Read a GIF image from standard input")
+	flagPngFromStdin = flag.Bool("png-from-stdin", false, "Read a PNG image from standard input")
+	flagJpgFromStdin = flag.Bool("jpg-from-stdin", false, "Read a JPEG image from standard input")
 )
 
 func drawFile(ctx context.Context, fname string, clipping func(image.Image) image.Rectangle, pen image2ansi.Pen, w io.Writer) error {
@@ -89,6 +93,27 @@ func mains(args []string) error {
 		if err != nil {
 			return fmt.Errorf("%s: %w", fname, err)
 		}
+	}
+	if *flagGifFromStdin {
+		img, err := gif.Decode(os.Stdin)
+		if err != nil {
+			return err
+		}
+		return image2ansi.Draw(ctx, img, clipping(img), pen, os.Stdout)
+	}
+	if *flagPngFromStdin {
+		img, err := png.Decode(os.Stdin)
+		if err != nil {
+			return err
+		}
+		return image2ansi.Draw(ctx, img, clipping(img), pen, os.Stdout)
+	}
+	if *flagJpgFromStdin {
+		img, err := jpeg.Decode(os.Stdin)
+		if err != nil {
+			return err
+		}
+		return image2ansi.Draw(ctx, img, clipping(img), pen, os.Stdout)
 	}
 	return nil
 }
