@@ -115,6 +115,9 @@ func mains(args []string) error {
 		}
 		return image2ansi.Draw(ctx, img, clipping(img), pen, os.Stdout)
 	}
+	if len(args) <= 0 {
+		flag.Usage()
+	}
 	return nil
 }
 
