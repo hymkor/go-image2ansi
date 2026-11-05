@@ -6,9 +6,9 @@ Display images as text in a terminal.
 
 ![](./demo.gif)
 
-<!--
-curl "https://avatars.githubusercontent.com/u/3752189?s=400&u=ea799fc495e6b0c62ef860bc5a955f8c8baa09df" | image2ansi -png-from-stdin
--->
+```
+curl "https://upload.wikimedia.org/wikipedia/en/3/3d/Longcat_is_loooooooooong.jpg" | image2ansi -24 -x 55 -y 20 -h 50 -jpg-from-stdin
+```
 
 - Uses Unicode U+2580 ( &#x2580; ) and ANSI color sequences instead of Sixel Graphics. Each character cell represents two vertical pixels.
 - Tested with Windows Terminal, Command Prompt, ConEmu,  WezTerm, and GNOME Terminal. In theory, it should work on any terminal that supports Unicode block characters and ANSI color sequences.
