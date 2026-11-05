@@ -4,6 +4,12 @@ go-image2ansi
 
 指定した画像をターミナルにテキストとして出力します。
 
+![](./demo.gif)
+
+<!--
+curl "https://avatars.githubusercontent.com/u/3752189?s=400&u=ea799fc495e6b0c62ef860bc5a955f8c8baa09df" | image2ansi -png-from-stdin
+-->
+
 - Sixel Graphics を使わず、Unicode の U+2580 ( &#x2580; ) と ANSIカラーシーケンスを用いて、テキストの１キャラクターに２ピクセルを表示させます。
 - Windows Terminal, Command Prompt, ConEmu, WezTerm, GNOME Terminal で動作確認しています。Unicode のブロック文字と、ANSI カラーシーケンスをサポートする端末であれば、理論上動作します。
 
