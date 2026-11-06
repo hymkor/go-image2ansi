@@ -29,3 +29,7 @@ func (color256) Foreground(r, g, b, a uint32, w io.Writer) {
 func (color256) Background(r, g, b, a uint32, w io.Writer) {
 	fmt.Fprintf(w, "\x1B[48;5;%dm", id(r, g, b, a))
 }
+
+func (color256) Newline(w io.Writer) {
+	io.WriteString(w, "\x1B[0m\n")
+}

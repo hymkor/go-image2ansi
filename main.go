@@ -11,6 +11,7 @@ const blockChar = "\u2580"
 type Pen interface {
 	Foreground(r, g, b, a uint32, w io.Writer)
 	Background(r, g, b, a uint32, w io.Writer)
+	Newline(w io.Writer)
 }
 
 type penAndColor struct {
@@ -51,7 +52,7 @@ func Draw(ctx context.Context, img image.Image, rec image.Rectangle, pen Pen, w 
 			r1, g1, b1, a1 := img.At(x, y).RGBA()
 			pc.draw(r1, g1, b1, a1, r2, g2, b2, a2, w)
 		}
-		io.WriteString(w, "\x1B[0m\n")
+		pen.Newline(w)
 		if err := ctx.Err(); err != nil {
 			return err
 		}
