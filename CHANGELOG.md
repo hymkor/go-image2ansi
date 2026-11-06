@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.2.0
+------
+Nov 5, 2026
+
 - Refactoring only
   - Moved clipping-related functions into the `clipping` subpackage.
   - Consolidated duplicated code.
