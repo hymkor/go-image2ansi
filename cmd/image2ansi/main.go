@@ -20,6 +20,7 @@ import (
 	"github.com/hymkor/go-windows1x-virtualterminal"
 
 	"github.com/hymkor/go-image2ansi"
+	"github.com/hymkor/go-image2ansi/clipping"
 )
 
 var (
@@ -65,33 +66,13 @@ func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) 
 func clippingTermWidth(fd int) func(image.Rectangle) image.Rectangle {
 	width, _, err := term.GetSize(fd)
 	if err != nil {
-		return image2ansi.NoClipping
+		return clipping.Identity
 	}
-	return image2ansi.ClippingWidth(width)
-}
-
-func clippingHeight(height int) func(image.Rectangle) image.Rectangle {
-	return func(rec image.Rectangle) image.Rectangle {
-		if rec.Max.Y-rec.Min.Y > height {
-			rec.Max.Y = rec.Min.Y + height
-		}
-		return rec
-	}
-}
-
-func joinClipping(f ...func(image.Rectangle) image.Rectangle) func(image.Rectangle) image.Rectangle {
-	return func(rec image.Rectangle) image.Rectangle {
-		for _, f1 := range f {
-			if f1 != nil {
-				rec = f1(rec)
-			}
-		}
-		return rec
-	}
+	return clipping.MaxWidth(width)
 }
 
 func mains(args []string) error {
-	clipping := image2ansi.ShiftView(*flagX, *flagY)
+	clipping1 := clipping.From(*flagX, *flagY)
 	fd := int(os.Stdout.Fd())
 	if term.IsTerminal(fd) {
 		closer, err := virtualterminal.EnableStdout()
@@ -100,14 +81,14 @@ func mains(args []string) error {
 		}
 		defer closer()
 		if *flagWidth <= 0 {
-			clipping = joinClipping(clipping, clippingTermWidth(fd))
+			clipping1 = clipping.Compose(clipping1, clippingTermWidth(fd))
 		}
 	}
 	if *flagWidth > 0 {
-		clipping = joinClipping(clipping, image2ansi.ClippingWidth(*flagWidth))
+		clipping1 = clipping.Compose(clipping1, clipping.MaxWidth(*flagWidth))
 	}
 	if *flagHeight > 0 {
-		clipping = joinClipping(clipping, clippingHeight(*flagHeight))
+		clipping1 = clipping.Compose(clipping1, clipping.MaxHeight(*flagHeight))
 	}
 	var pen image2ansi.Pen = image2ansi.Color256
 	if *flagTrueColor {
@@ -118,7 +99,7 @@ func mains(args []string) error {
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
 	for _, fname := range args {
-		err := drawFile(ctx, fname, clipping, pen, os.Stdout)
+		err := drawFile(ctx, fname, clipping1, pen, os.Stdout)
 		if err != nil {
 			return fmt.Errorf("%s: %w", fname, err)
 		}
@@ -128,21 +109,21 @@ func mains(args []string) error {
 		if err != nil {
 			return err
 		}
-		return image2ansi.Draw(ctx, img, clipping(img.Bounds()), pen, os.Stdout)
+		return image2ansi.Draw(ctx, img, clipping1(img.Bounds()), pen, os.Stdout)
 	}
 	if *flagPngFromStdin {
 		img, err := png.Decode(os.Stdin)
 		if err != nil {
 			return err
 		}
-		return image2ansi.Draw(ctx, img, clipping(img.Bounds()), pen, os.Stdout)
+		return image2ansi.Draw(ctx, img, clipping1(img.Bounds()), pen, os.Stdout)
 	}
 	if *flagJpgFromStdin {
 		img, err := jpeg.Decode(os.Stdin)
 		if err != nil {
 			return err
 		}
-		return image2ansi.Draw(ctx, img, clipping(img.Bounds()), pen, os.Stdout)
+		return image2ansi.Draw(ctx, img, clipping1(img.Bounds()), pen, os.Stdout)
 	}
 	if len(args) <= 0 {
 		flag.Usage()

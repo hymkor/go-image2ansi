@@ -58,26 +58,3 @@ func Draw(ctx context.Context, img image.Image, rec image.Rectangle, pen Pen, w 
 	}
 	return nil
 }
-
-func NoClipping(rec image.Rectangle) image.Rectangle {
-	return rec
-}
-
-func ClippingWidth(width int) func(rec image.Rectangle) image.Rectangle {
-	return func(rec image.Rectangle) image.Rectangle {
-		if rec.Max.X-rec.Min.X > width {
-			rec.Max.X = rec.Min.X + width
-		}
-		return rec
-	}
-}
-
-func ShiftView(x, y int) func(rec image.Rectangle) image.Rectangle {
-	return func(rec image.Rectangle) image.Rectangle {
-		rec.Min.X += x
-		rec.Min.Y += y
-		rec.Max.X += x
-		rec.Max.Y += y
-		return rec
-	}
-}
