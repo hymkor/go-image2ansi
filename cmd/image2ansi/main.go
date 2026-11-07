@@ -25,6 +25,7 @@ import (
 
 var (
 	flagTrueColor = flag.Bool("24", false, "Use 24-bit true color")
+	flagGray      = flag.Bool("gray", false, "Use 256-color grayscale")
 
 	flagX      = flag.Int("x", 0, "Image start X (0-based)")
 	flagY      = flag.Int("y", 0, "Image start Y (0-based)")
@@ -93,6 +94,8 @@ func mains(args []string) error {
 	var pen *image2ansi.Pen = image2ansi.Color256
 	if *flagTrueColor {
 		pen = image2ansi.TrueColor
+	} else if *flagGray {
+		pen = image2ansi.Gray256
 	}
 
 	ctx := context.Background()
