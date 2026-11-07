@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"golang.org/x/image/bmp"
 	"golang.org/x/term"
 
 	"github.com/biessek/golang-ico"
@@ -57,6 +58,8 @@ func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) 
 		img, err = jpeg.Decode(fd)
 	} else if strings.EqualFold(ext, ".gif") {
 		img, err = gif.Decode(fd)
+	} else if strings.EqualFold(ext, ".bmp") {
+		img, err = bmp.Decode(fd)
 	} else if strings.EqualFold(ext, ".ico") {
 		images, err := ico.DecodeAll(fd)
 		if err != nil {
