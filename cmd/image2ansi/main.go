@@ -118,10 +118,25 @@ func mains(args []string) error {
 	ctx := context.Background()
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
-	for _, fname := range args {
-		err := drawFile(ctx, fname, clipping1, pen, os.Stdout)
-		if err != nil {
-			return fmt.Errorf("%s: %w", fname, err)
+	for _, arg := range args {
+		if fnames, err := filepath.Glob(arg); err != nil {
+			if len(args) > 1 {
+				fmt.Fprintf(os.Stdout, "%s:\n", arg)
+			}
+			err := drawFile(ctx, arg, clipping1, pen, os.Stdout)
+			if err != nil {
+				return fmt.Errorf("%s: %w", arg, err)
+			}
+		} else {
+			for _, fname := range fnames {
+				if len(args) > 1 || len(fnames) > 1 {
+					fmt.Fprintf(os.Stdout, "%s:\n", fname)
+				}
+				err := drawFile(ctx, fname, clipping1, pen, os.Stdout)
+				if err != nil {
+					return fmt.Errorf("%s: %w", fname, err)
+				}
+			}
 		}
 	}
 	if *flagGifFromStdin {
