@@ -20,6 +20,7 @@ import (
 	"golang.org/x/term"
 
 	"github.com/biessek/golang-ico"
+	"rsc.io/qr"
 
 	"github.com/hymkor/go-windows1x-virtualterminal"
 
@@ -41,6 +42,8 @@ var (
 	flagGifFromStdin = flag.Bool("gif-from-stdin", false, "Read a GIF image from standard input")
 	flagPngFromStdin = flag.Bool("png-from-stdin", false, "Read a PNG image from standard input")
 	flagJpgFromStdin = flag.Bool("jpg-from-stdin", false, "Read a JPEG image from standard input")
+
+	flagQR = flag.String("qr", "", "Display the given string as a QR code")
 )
 
 func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
@@ -171,6 +174,16 @@ func mains(args []string) error {
 			return err
 		}
 		return pen.Draw(ctx, img, clipping1(img.Bounds()), os.Stdout)
+	}
+	if *flagQR != "" {
+		code, err := qr.Encode(*flagQR, qr.L)
+		if err != nil {
+			return err
+		}
+		img := code.Image()
+		d := code.Size + 1
+		return pen.Draw(ctx, img, clipping1(
+			image.Rect(0, 0, d, d)), os.Stdout)
 	}
 	if len(args) <= 0 {
 		fmt.Fprintf(os.Stderr, "%s %s-%s-%s\n",

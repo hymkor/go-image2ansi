@@ -7,6 +7,7 @@ require (
 	github.com/hymkor/go-windows1x-virtualterminal v0.5.0
 	golang.org/x/image v0.47.0
 	golang.org/x/term v0.8.0
+	rsc.io/qr v0.2.0
 )
 
 require (
