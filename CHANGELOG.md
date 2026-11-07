@@ -2,6 +2,7 @@ Changelog
 =========
 
 - Add options: `-mono` and `-mono-reverse` (#8)
+- Add option: `-qr` (#9)
 
 v0.3.0
 ------
