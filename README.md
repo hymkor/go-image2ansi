@@ -78,7 +78,7 @@ image2ansi [options...] image-file...
 - `-gray`  
   Use 256-color grayscale.
 - `-mono`  
-  Use monochrome (black and white) output")
+  Use monochrome (black and white) output
 - `-mono-reverse`  
   Reverse monochrome output for light backgrounds
 - `-x X`  
@@ -96,6 +96,8 @@ image2ansi [options...] image-file...
   Read a JPEG image from standard input
 - `-png-from-stdin`  
   Read a PNG image from standard input
+- `-qr string`  
+  Display the given string as a QR code
 
 ### Supported Image Formats
 
