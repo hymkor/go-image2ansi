@@ -1,6 +1,8 @@
 Changelog
 =========
 
+- `-mono`、 `-mono-reverse` オプション追加 (#8)
+
 v0.3.0
 ------
 Nov 7, 2026

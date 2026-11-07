@@ -28,8 +28,10 @@ import (
 )
 
 var (
-	flagTrueColor = flag.Bool("24", false, "Use 24-bit true color")
-	flagGray      = flag.Bool("gray", false, "Use 256-color grayscale")
+	flagTrueColor   = flag.Bool("24", false, "Use 24-bit true color")
+	flagGray        = flag.Bool("gray", false, "Use 256-color grayscale")
+	flagMono        = flag.Bool("mono", false, "Use monochrome (black and white) output")
+	flagMonoReverse = flag.Bool("mono-reverse", false, "Reverse monochrome output for light backgrounds")
 
 	flagX      = flag.Int("x", 0, "Image start X (0-based)")
 	flagY      = flag.Int("y", 0, "Image start Y (0-based)")
@@ -119,6 +121,10 @@ func mains(args []string) error {
 		pen = image2ansi.TrueColor
 	} else if *flagGray {
 		pen = image2ansi.Gray256
+	} else if *flagMono {
+		pen = image2ansi.MonoChrome
+	} else if *flagMonoReverse {
+		pen = image2ansi.MonoChromeReverse
 	}
 
 	ctx := context.Background()

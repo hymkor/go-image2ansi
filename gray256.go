@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-type gray256 struct{}
+type gray256 struct{ defaultInk }
 
 var Gray256 = &Pen{Ink: gray256{}}
 
@@ -35,8 +35,4 @@ func (gray256) Foreground(r, g, b, a uint32, w io.Writer) {
 
 func (gray256) Background(r, g, b, a uint32, w io.Writer) {
 	fmt.Fprintf(w, "\x1B[48;5;%dm", grayID(r, g, b, a))
-}
-
-func (gray256) Newline(w io.Writer) {
-	io.WriteString(w, "\x1B[0m\n")
 }
