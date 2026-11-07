@@ -11,7 +11,18 @@ const blockChar = "\u2580"
 type Ink interface {
 	Foreground(r, g, b, a uint32, w io.Writer)
 	Background(r, g, b, a uint32, w io.Writer)
+	DrawBlock(w io.Writer)
 	Newline(w io.Writer)
+}
+
+type defaultInk struct{}
+
+func (defaultInk) DrawBlock(w io.Writer) {
+	io.WriteString(w, blockChar)
+}
+
+func (defaultInk) Newline(w io.Writer) {
+	io.WriteString(w, "\x1B[0m\n")
 }
 
 type Pen struct {
@@ -38,7 +49,7 @@ func (p *Pen) draw(r1, g1, b1, a1, r2, g2, b2, a2 uint32, w io.Writer) {
 		p.a2 = a2
 		p.init2 = true
 	}
-	io.WriteString(w, blockChar)
+	p.DrawBlock(w)
 }
 
 func (p *Pen) Draw(ctx context.Context, img image.Image, rec image.Rectangle, w io.Writer) error {

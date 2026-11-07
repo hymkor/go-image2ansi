@@ -4,9 +4,11 @@ import (
 	"io"
 )
 
-type monoChrome struct{}
+type monoChrome struct {
+	value int
+}
 
-var MonoChrome = &Pen{Ink: monoChrome{}}
+var MonoChrome = &Pen{Ink: &monoChrome{}}
 
 func isWhite(r, g, b, a uint32) bool {
 	if a == 0 {
@@ -21,22 +23,32 @@ func isWhite(r, g, b, a uint32) bool {
 	return y >= 128
 }
 
-func (monoChrome) Foreground(r, g, b, a uint32, w io.Writer) {
+func (m *monoChrome) Foreground(r, g, b, a uint32, w io.Writer) {
 	if isWhite(r, g, b, a) {
-		io.WriteString(w, "\x1B[37m")
+		m.value |= 1
 	} else {
-		io.WriteString(w, "\x1B[30m")
+		m.value &^= 1
 	}
 }
 
-func (monoChrome) Background(r, g, b, a uint32, w io.Writer) {
+func (m *monoChrome) Background(r, g, b, a uint32, w io.Writer) {
 	if isWhite(r, g, b, a) {
-		io.WriteString(w, "\x1B[47m")
+		m.value |= 2
 	} else {
-		io.WriteString(w, "\x1B[40m")
+		m.value &^= 2
 	}
 }
 
-func (monoChrome) Newline(w io.Writer) {
-	io.WriteString(w, "\x1B[0m\n")
+func (m *monoChrome) DrawBlock(w io.Writer) {
+	io.WriteString(w,
+		[]string{
+			" ",
+			"\u2580",
+			"\u2584",
+			"\u2588",
+		}[m.value])
+}
+
+func (m *monoChrome) Newline(w io.Writer) {
+	io.WriteString(w, "\n")
 }
