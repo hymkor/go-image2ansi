@@ -7,7 +7,7 @@ import (
 
 type trueColor struct{}
 
-var TrueColor = trueColor{}
+var TrueColor = &Pen{Ink: trueColor{}}
 
 func rgb(r, g, b, a uint32) (uint32, uint32, uint32) {
 	const baseA = 255
@@ -32,4 +32,8 @@ func (trueColor) Foreground(r, g, b, a uint32, w io.Writer) {
 func (trueColor) Background(r, g, b, a uint32, w io.Writer) {
 	r, g, b = rgb(r, g, b, a)
 	fmt.Fprintf(w, "\x1B[48;2;%d;%d;%dm", r, g, b)
+}
+
+func (trueColor) Newline(w io.Writer) {
+	io.WriteString(w, "\x1B[0m\n")
 }
