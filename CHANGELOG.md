@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.3.0
+------
+Nov 7, 2026
+
 - Introduced a new `Pen` type with `Draw` as a method, and renamed the previous `Pen` type to `Ink`. (#3)
 - Added the `-gray` option for grayscale output. (#4)
 - Support .ico format (#5)
