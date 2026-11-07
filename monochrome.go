@@ -5,10 +5,23 @@ import (
 )
 
 type monoChrome struct {
-	value int
+	value   int
+	pattern []string
 }
 
-var MonoChrome = &Pen{Ink: &monoChrome{}}
+var (
+	MonoChrome = &Pen{
+		Ink: &monoChrome{
+			pattern: []string{" ", "\u2580", "\u2584", "\u2588"},
+		},
+	}
+
+	MonoChromeReverse = &Pen{
+		Ink: &monoChrome{
+			pattern: []string{"\u2588", "\u2584", "\u2580", " "},
+		},
+	}
+)
 
 func isWhite(r, g, b, a uint32) bool {
 	if a == 0 {
@@ -40,13 +53,7 @@ func (m *monoChrome) Background(r, g, b, a uint32, w io.Writer) {
 }
 
 func (m *monoChrome) DrawBlock(w io.Writer) {
-	io.WriteString(w,
-		[]string{
-			" ",
-			"\u2580",
-			"\u2584",
-			"\u2588",
-		}[m.value])
+	io.WriteString(w, m.pattern[m.value])
 }
 
 func (m *monoChrome) Newline(w io.Writer) {
