@@ -17,6 +17,8 @@ import (
 
 	"golang.org/x/term"
 
+	"github.com/biessek/golang-ico"
+
 	"github.com/hymkor/go-windows1x-virtualterminal"
 
 	"github.com/hymkor/go-image2ansi"
@@ -55,6 +57,21 @@ func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) 
 		img, err = jpeg.Decode(fd)
 	} else if strings.EqualFold(ext, ".gif") {
 		img, err = gif.Decode(fd)
+	} else if strings.EqualFold(ext, ".ico") {
+		images, err := ico.DecodeAll(fd)
+		if err != nil {
+			return err
+		}
+		for i, img := range images {
+			if i > 0 {
+				w.Write([]byte{'\n'})
+			}
+			err := pen.Draw(ctx, img, clipping(img.Bounds()), w)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
 	} else {
 		return errors.New("not support format")
 	}
