@@ -77,6 +77,10 @@ image2ansi [options...] image-file...
   - `ESC[48;5;{id2}m`
 - `-gray`  
   Use 256-color grayscale.
+- `-mono`  
+  Use monochrome (black and white) output")
+- `-mono-reverse`  
+  Reverse monochrome output for light backgrounds
 - `-x X`  
   Image start X (0-based)
 - `-y Y`  
