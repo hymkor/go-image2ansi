@@ -71,24 +71,32 @@ image2ansi [options...] image-file...
   Use 24-bit color with the following sequences:
   - `ESC[38;2;{r1};{g1};{b1}m`
   - `ESC[48;2;{r2};{g2};{b2}m`
-
+  
   By default, 256 colors are used:
   - `ESC[38;5;{id1}m`
   - `ESC[48;5;{id2}m`
+- `-gray`  
+  Use 256-color grayscale.
 - `-x X`  
-        Image start X (0-based)
+  Image start X (0-based)
 - `-y Y`  
-        Image start Y (0-based)
+  Image start Y (0-based)
 - `-w WIDTH`  
   Specify the output width.
   By default, the current terminal width is used. When output is redirected, no width limit is applied, and the original image width is used.
-- `-h HEIGHT` Specify the output height.
-- `-gif-from-stdin` Read a GIF image from standard input
-- `-jpg-from-stdin` Read a JPEG image from standard input
-- `-png-from-stdin` Read a PNG image from standard input
+- `-h HEIGHT`  
+  Specify the output height.
+- `-gif-from-stdin`  
+  Read a GIF image from standard input
+- `-jpg-from-stdin`  
+  Read a JPEG image from standard input
+- `-png-from-stdin`  
+  Read a PNG image from standard input
 
 ### Supported Image Formats
 
 - GIF
 - PNG
 - JPEG
+- BMP
+- ICO
