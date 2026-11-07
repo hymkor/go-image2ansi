@@ -36,7 +36,7 @@ var (
 	flagJpgFromStdin = flag.Bool("jpg-from-stdin", false, "Read a JPEG image from standard input")
 )
 
-func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) image.Rectangle, pen image2ansi.Pen, w io.Writer) error {
+func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
 	fd, err := os.Open(fname)
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) 
 	if err != nil {
 		return err
 	}
-	return image2ansi.Draw(ctx, img, clipping(img.Bounds()), pen, w)
+	return pen.Draw(ctx, img, clipping(img.Bounds()), w)
 }
 
 func clippingTermWidth(fd int) func(image.Rectangle) image.Rectangle {
@@ -90,7 +90,7 @@ func mains(args []string) error {
 	if *flagHeight > 0 {
 		clipping1 = clipping.Compose(clipping1, clipping.MaxHeight(*flagHeight))
 	}
-	var pen image2ansi.Pen = image2ansi.Color256
+	var pen *image2ansi.Pen = image2ansi.Color256
 	if *flagTrueColor {
 		pen = image2ansi.TrueColor
 	}
@@ -109,21 +109,21 @@ func mains(args []string) error {
 		if err != nil {
 			return err
 		}
-		return image2ansi.Draw(ctx, img, clipping1(img.Bounds()), pen, os.Stdout)
+		return pen.Draw(ctx, img, clipping1(img.Bounds()), os.Stdout)
 	}
 	if *flagPngFromStdin {
 		img, err := png.Decode(os.Stdin)
 		if err != nil {
 			return err
 		}
-		return image2ansi.Draw(ctx, img, clipping1(img.Bounds()), pen, os.Stdout)
+		return pen.Draw(ctx, img, clipping1(img.Bounds()), os.Stdout)
 	}
 	if *flagJpgFromStdin {
 		img, err := jpeg.Decode(os.Stdin)
 		if err != nil {
 			return err
 		}
-		return image2ansi.Draw(ctx, img, clipping1(img.Bounds()), pen, os.Stdout)
+		return pen.Draw(ctx, img, clipping1(img.Bounds()), os.Stdout)
 	}
 	if len(args) <= 0 {
 		flag.Usage()

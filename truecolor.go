@@ -7,7 +7,7 @@ import (
 
 type trueColor struct{}
 
-var TrueColor = trueColor{}
+var TrueColor = &Pen{Ink: trueColor{}}
 
 func rgb(r, g, b, a uint32) (uint32, uint32, uint32) {
 	const baseA = 255

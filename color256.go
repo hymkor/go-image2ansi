@@ -7,7 +7,7 @@ import (
 
 type color256 struct{}
 
-var Color256 = color256{}
+var Color256 = &Pen{Ink: color256{}}
 
 func id(r, g, b, a uint32) uint32 {
 	if a == 0 {
