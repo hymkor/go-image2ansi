@@ -2,6 +2,8 @@ Changelog
 =========
 
 - Introduced a new `Pen` type with `Draw` as a method, and renamed the previous `Pen` type to `Ink`. (#3)
+- Added the `-gray` option for grayscale output. (#4)
+
 v0.2.0
 ------
 Nov 6, 2026
