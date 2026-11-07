@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"golang.org/x/image/bmp"
@@ -92,6 +93,8 @@ func clippingTermWidth(fd int) func(image.Rectangle) image.Rectangle {
 	return clipping.MaxWidth(width)
 }
 
+var version string
+
 func mains(args []string) error {
 	clipping1 := clipping.From(*flagX, *flagY)
 	fd := int(os.Stdout.Fd())
@@ -164,6 +167,11 @@ func mains(args []string) error {
 		return pen.Draw(ctx, img, clipping1(img.Bounds()), os.Stdout)
 	}
 	if len(args) <= 0 {
+		fmt.Fprintf(os.Stderr, "%s %s-%s-%s\n",
+			filepath.Base(os.Args[0]),
+			version,
+			runtime.GOOS,
+			runtime.GOARCH)
 		flag.Usage()
 	}
 	return nil
