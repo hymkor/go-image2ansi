@@ -101,3 +101,13 @@ image2ansi {オプション...} 画像ファイル名...
 ### 画像ファイル名
 
 .GIF、.PNG、.JPG(.JPEG)、.BMP、.ICO が利用可能です。
+
+## テキストページャ [nemo] との連携
+
+画像がターミナルの表示範囲に収まらない場合は、出力を [nemo] にパイプで渡すことで、行を折り返さずに縦横スクロールして表示できます。
+
+```sh
+image2ansi image.png | nemo
+```
+
+[nemo]: https://github.com/hymkor/nemo

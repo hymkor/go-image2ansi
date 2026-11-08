@@ -106,3 +106,15 @@ image2ansi [options...] image-file...
 - JPEG
 - BMP
 - ICO
+
+## Using with the text pager, [nemo]
+
+When the image is too large to fit in the terminal, you can
+pipe the output to [nemo]
+to scroll both horizontally and vertically without wrapping lines.
+
+```sh
+image2ansi image.png | nemo
+```
+
+[nemo]: https://github.com/hymkor/nemo
