@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.4.0
+------
+Nov 8, 2026
+
 - Add options: `-mono` and `-mono-reverse` (#8)
 - Add option: `-qr` (#9)
 
