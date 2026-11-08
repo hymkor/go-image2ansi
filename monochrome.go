@@ -9,16 +9,23 @@ type monoChrome struct {
 	pattern []string
 }
 
+const (
+	space          = " "
+	upperHalfBlock = "\u2580"
+	lowerHalfBlock = "\u2584"
+	fullBlock      = "\u2588"
+)
+
 var (
 	MonoChrome = &Pen{
 		Ink: &monoChrome{
-			pattern: []string{" ", "\u2580", "\u2584", "\u2588"},
+			pattern: []string{space, upperHalfBlock, lowerHalfBlock, fullBlock},
 		},
 	}
 
 	MonoChromeReverse = &Pen{
 		Ink: &monoChrome{
-			pattern: []string{"\u2588", "\u2584", "\u2580", " "},
+			pattern: []string{fullBlock, lowerHalfBlock, upperHalfBlock, space},
 		},
 	}
 )
