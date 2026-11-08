@@ -31,7 +31,7 @@ import (
 var (
 	flagTrueColor   = flag.Bool("24", false, "Use 24-bit true color")
 	flagGray        = flag.Bool("gray", false, "Use 256-color grayscale")
-	flagMono        = flag.Bool("mono", false, "Use monochrome (black and white) output")
+	flagMono        = flag.Bool("mono", false, "Use monochrome output with Unicode block characters (no ANSI escape sequences)")
 	flagMonoReverse = flag.Bool("mono-reverse", false, "Reverse monochrome output for light backgrounds")
 
 	flagX      = flag.Int("x", 0, "Image start X (0-based)")

@@ -78,7 +78,7 @@ image2ansi [options...] image-file...
 - `-gray`  
   Use 256-color grayscale.
 - `-mono`  
-  Use monochrome (black and white) output
+  Use monochrome output with Unicode block characters ( U+2580: &#x2580; , U+2584: &#x2584; , U+2588: &#x2588; ) . No ANSI escape sequences.
 - `-mono-reverse`  
   Reverse monochrome output for light backgrounds
 - `-x X`  
