@@ -20,7 +20,9 @@ func gifDecode(ctx context.Context, img *gif.GIF, clip func(image.Rectangle) ima
 		img.Config.Height)
 	canvas := image.NewRGBA(rec)
 	rec = clip(rec)
-	up := 0
+	line := 0
+	defer pen.Newline(w)
+
 	var delay <-chan time.Time
 	for i, frame := range img.Image {
 		// fmt.Fprintf(w, "%d: (%d,%d)-(%d,%d)\n", i, b.Min.X, b.Min.Y, b.Max.X, b.Max.Y)
@@ -33,8 +35,8 @@ func gifDecode(ctx context.Context, img *gif.GIF, clip func(image.Rectangle) ima
 			}
 		}
 		delay = time.After(time.Duration(img.Delay[i]) * time.Second / 100)
-		if up > 0 {
-			fmt.Fprintf(w, "\x1B[%dA", up)
+		if line > 1 {
+			fmt.Fprintf(w, "\x1B[0m\x1B[%dF", line-1)
 		}
 		draw.Draw(
 			canvas,
@@ -43,11 +45,11 @@ func gifDecode(ctx context.Context, img *gif.GIF, clip func(image.Rectangle) ima
 			frame.Bounds().Min,
 			draw.Over,
 		)
-		err := pen.Draw(ctx, canvas, rec, w)
+		err := pen.DrawNoNewline(ctx, canvas, rec, w)
 		if err != nil {
 			return err
 		}
-		up = (rec.Max.Y - rec.Min.Y + 1) / 2
+		line = (rec.Max.Y - rec.Min.Y + 1) / 2
 	}
 	return nil
 }

@@ -111,7 +111,7 @@ func clippingTermHeight(fd int) func(image.Rectangle) image.Rectangle {
 	if err != nil {
 		return clipping.Identity
 	}
-	return clipping.MaxHeight(height*2 - 2)
+	return clipping.MaxHeight(height*2 - 1)
 }
 
 var version string
