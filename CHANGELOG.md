@@ -1,6 +1,8 @@
 Changelog
 =========
 
+- Support FreeBSD and macOS experimantally (#10)
+
 v0.4.0
 ------
 Nov 8, 2026
