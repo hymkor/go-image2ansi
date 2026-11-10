@@ -57,7 +57,14 @@ func (s *session) draw(r1, g1, b1, a1, r2, g2, b2, a2 uint32, w io.Writer) {
 }
 
 func (p *Pen) Draw(ctx context.Context, img image.Image, rec image.Rectangle, w io.Writer) error {
-	for y := rec.Min.Y; y < rec.Max.Y; y += 2 {
+	err := p.DrawNoNewline(ctx, img, rec, w)
+	p.Newline(w)
+	return err
+}
+
+func (p *Pen) DrawNoNewline(ctx context.Context, img image.Image, rec image.Rectangle, w io.Writer) error {
+	y := rec.Min.Y
+	for {
 		s := &session{Ink: p.Ink}
 		for x := rec.Min.X; x < rec.Max.X; x++ {
 			var r2, g2, b2, a2 uint32
@@ -66,6 +73,9 @@ func (p *Pen) Draw(ctx context.Context, img image.Image, rec image.Rectangle, w 
 			}
 			r1, g1, b1, a1 := img.At(x, y).RGBA()
 			s.draw(r1, g1, b1, a1, r2, g2, b2, a2, w)
+		}
+		if y += 2; y >= rec.Max.Y {
+			break
 		}
 		s.Newline(w)
 		if err := ctx.Err(); err != nil {

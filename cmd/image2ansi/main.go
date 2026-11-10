@@ -33,6 +33,7 @@ var (
 	flagGray        = flag.Bool("gray", false, "Use 256-color grayscale")
 	flagMono        = flag.Bool("mono", false, "Use monochrome output with Unicode block characters (no ANSI escape sequences)")
 	flagMonoReverse = flag.Bool("mono-reverse", false, "Reverse monochrome output for light backgrounds")
+	flagAnimation   = flag.Bool("animation", false, "Enable experimental animated GIF support")
 
 	flagX      = flag.Int("x", 0, "Image start X (0-based)")
 	flagY      = flag.Int("y", 0, "Image start Y (0-based)")
@@ -63,6 +64,13 @@ func drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) 
 	} else if strings.EqualFold(ext, ".jpeg") {
 		img, err = jpeg.Decode(fd)
 	} else if strings.EqualFold(ext, ".gif") {
+		if *flagAnimation {
+			gifimg, err := gif.DecodeAll(fd)
+			if err != nil {
+				return fmt.Errorf(`"image/gif".DecodeAll: %w`, err)
+			}
+			return gifDecode(ctx, gifimg, clipping, pen, w)
+		}
 		img, err = gif.Decode(fd)
 	} else if strings.EqualFold(ext, ".bmp") {
 		img, err = bmp.Decode(fd)
@@ -98,6 +106,14 @@ func clippingTermWidth(fd int) func(image.Rectangle) image.Rectangle {
 	return clipping.MaxWidth(width)
 }
 
+func clippingTermHeight(fd int) func(image.Rectangle) image.Rectangle {
+	_, height, err := term.GetSize(fd)
+	if err != nil {
+		return clipping.Identity
+	}
+	return clipping.MaxHeight(height*2 - 1)
+}
+
 var version string
 
 func mains(args []string) error {
@@ -111,6 +127,9 @@ func mains(args []string) error {
 		defer closer()
 		if *flagWidth <= 0 {
 			clipping1 = clipping.Compose(clipping1, clippingTermWidth(fd))
+		}
+		if *flagAnimation && *flagHeight <= 0 {
+			clipping1 = clipping.Compose(clipping1, clippingTermHeight(fd))
 		}
 	}
 	if *flagWidth > 0 {
@@ -155,6 +174,13 @@ func mains(args []string) error {
 		}
 	}
 	if *flagGifFromStdin {
+		if *flagAnimation {
+			gifimg, err := gif.DecodeAll(os.Stdin)
+			if err != nil {
+				return err
+			}
+			return gifDecode(ctx, gifimg, clipping1, pen, os.Stdout)
+		}
 		img, err := gif.Decode(os.Stdin)
 		if err != nil {
 			return err
