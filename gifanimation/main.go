@@ -2,6 +2,7 @@ package gifanimation
 
 import (
 	"image"
+	"image/color"
 	"image/draw"
 	"image/gif"
 	"time"
@@ -35,6 +36,14 @@ func Each(img *gif.GIF) func(yield func(int, *View) bool) {
 			img.Config.Width,
 			img.Config.Height))
 
+	bg := color.Color(color.Transparent)
+	if palette, ok := img.Config.ColorModel.(color.Palette); ok {
+		if int(img.BackgroundIndex) < len(palette) {
+			bg = palette[img.BackgroundIndex]
+		}
+	}
+	background := image.NewUniform(bg)
+
 	return func(yield func(int, *View) bool) {
 		var count int
 		switch img.LoopCount {
@@ -45,8 +54,19 @@ func Each(img *gif.GIF) func(yield func(int, *View) bool) {
 		default:
 			count = img.LoopCount + 1
 		}
+		var prev *image.Paletted
+		var prevDisposal byte
 		for i := 0; i < count; i++ {
 			for j, frame := range img.Image {
+				if prev != nil && prevDisposal == gif.DisposalBackground {
+					draw.Draw(
+						canvas,
+						prev.Bounds(),
+						background,
+						image.Point{},
+						draw.Src,
+					)
+				}
 				v := &View{
 					canvas: canvas,
 					frame:  frame,
@@ -54,6 +74,12 @@ func Each(img *gif.GIF) func(yield func(int, *View) bool) {
 				}
 				if !yield(j, v) {
 					return
+				}
+				prev = frame
+				if j < len(img.Disposal) {
+					prevDisposal = img.Disposal[j]
+				} else {
+					prevDisposal = 0
 				}
 			}
 		}
