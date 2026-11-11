@@ -98,6 +98,8 @@ image2ansi [options...] image-file...
   Read a PNG image from standard input
 - `-qr string`  
   Display the given string as a QR code
+- `-animation`  
+  Enable experimental animated GIF support
 
 ### Supported Image Formats
 
