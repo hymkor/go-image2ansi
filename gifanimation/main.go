@@ -43,6 +43,7 @@ func Each(img *gif.GIF) func(yield func(int, *View) bool) {
 		}
 	}
 	background := image.NewUniform(bg)
+	backup := image.NewRGBA(canvas.Bounds())
 
 	return func(yield func(int, *View) bool) {
 		var count int
@@ -58,11 +59,31 @@ func Each(img *gif.GIF) func(yield func(int, *View) bool) {
 		var prevDisposal byte
 		for i := 0; i < count; i++ {
 			for j, frame := range img.Image {
-				if prev != nil && prevDisposal == gif.DisposalBackground {
+				if prev != nil {
+					switch prevDisposal {
+					case gif.DisposalBackground:
+						draw.Draw(
+							canvas,
+							prev.Bounds(),
+							background,
+							image.Point{},
+							draw.Src,
+						)
+					case gif.DisposalPrevious:
+						draw.Draw(
+							canvas,
+							canvas.Bounds(),
+							backup,
+							image.Point{},
+							draw.Src,
+						)
+					}
+				}
+				if j < len(img.Disposal) && img.Disposal[j] == gif.DisposalPrevious {
 					draw.Draw(
+						backup,
+						canvas.Bounds(),
 						canvas,
-						prev.Bounds(),
-						background,
 						image.Point{},
 						draw.Src,
 					)
