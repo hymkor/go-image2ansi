@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.5.0
+------
+Nov 19, 2026
+
 - macOS とFreeBSD を試験的にサポート (#10)
 - アニメーションGIFを表示するオプション -animation を追加 (experimental) (#11, #12)
 

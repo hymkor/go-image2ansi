@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.5.0
+------
+Nov 19, 2026
+
 - Support FreeBSD and macOS experimantally (#10)
 - Added experimental support for animated GIFs with the `-animation` option. (#11, #12)
 
