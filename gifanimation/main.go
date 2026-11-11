@@ -36,14 +36,25 @@ func Each(img *gif.GIF) func(yield func(int, *View) bool) {
 			img.Config.Height))
 
 	return func(yield func(int, *View) bool) {
-		for i, frame := range img.Image {
-			v := &View{
-				canvas: canvas,
-				frame:  frame,
-				delay:  img.Delay[i],
-			}
-			if !yield(i, v) {
-				break
+		var count int
+		switch img.LoopCount {
+		case 0:
+			count = 32767
+		case -1:
+			count = 1
+		default:
+			count = img.LoopCount + 1
+		}
+		for i := 0; i < count; i++ {
+			for j, frame := range img.Image {
+				v := &View{
+					canvas: canvas,
+					frame:  frame,
+					delay:  img.Delay[j],
+				}
+				if !yield(j, v) {
+					return
+				}
 			}
 		}
 	}
