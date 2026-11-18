@@ -1,0 +1,28 @@
+{
+    "version": "0.5.0",
+    "description": "Display images in terminals using Unicode block characters and ANSI color sequences.",
+    "homepage": "https://github.com/hymkor/go-image2ansi",
+    "license": "MIT License",
+    "architecture": {
+        "32bit": {
+            "url": "https://github.com/hymkor/go-image2ansi/releases/download/v0.5.0/image2ansi-v0.5.0-windows-386.zip",
+            "hash": "ca6577fe8629e2a005c2fc4c8dc06fc239f07f39a42d946d579451bb8b93b7c7"
+        },
+        "64bit": {
+            "url": "https://github.com/hymkor/go-image2ansi/releases/download/v0.5.0/image2ansi-v0.5.0-windows-amd64.zip",
+            "hash": "18c65277553db10bbba47185dae858070fa29f4ce136ab976490fe9c99c48991"
+        }
+    },
+    "bin": "image2ansi.exe",
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "32bit": {
+                "url": "https://github.com/hymkor/go-image2ansi/releases/download/v$version/image2ansi-v$version-windows-386.zip"
+            },
+            "64bit": {
+                "url": "https://github.com/hymkor/go-image2ansi/releases/download/v$version/image2ansi-v$version-windows-amd64.zip"
+            }
+        }
+    }
+}
