@@ -2,7 +2,7 @@ Changelog
 =========
 
 - Support FreeBSD and macOS experimantally (#10)
-- Added experimental support for animated GIFs with the `-animation` option. (#11)
+- Added experimental support for animated GIFs with the `-animation` option. (#11, #12)
 
 v0.4.0
 ------

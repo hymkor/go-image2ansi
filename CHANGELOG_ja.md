@@ -2,7 +2,7 @@ Changelog
 =========
 
 - macOS とFreeBSD を試験的にサポート (#10)
-- アニメーションGIFを表示するオプション -animation を追加 (experimental) (#11)
+- アニメーションGIFを表示するオプション -animation を追加 (experimental) (#11, #12)
 
 v0.4.0
 ------
