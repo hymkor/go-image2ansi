@@ -50,6 +50,21 @@ type Config struct {
 	QR string `flag:"qr,Display the given string as a QR code"`
 }
 
+func (cfg *Config) drawGif(ctx context.Context, fd io.Reader, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
+	if cfg.Animation {
+		img, err := gif.DecodeAll(fd)
+		if err != nil {
+			return fmt.Errorf(`"image/gif".DecodeAll: %w`, err)
+		}
+		return gifDecode(ctx, img, clipping, pen, w)
+	}
+	img, err := gif.Decode(fd)
+	if err != nil {
+		return err
+	}
+	return pen.Draw(ctx, img, clipping(img.Bounds()), w)
+}
+
 func (cfg *Config) drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
 	fd, err := os.Open(fname)
 	if err != nil {
@@ -67,14 +82,7 @@ func (cfg *Config) drawFile(ctx context.Context, fname string, clipping func(ima
 	} else if strings.EqualFold(ext, ".jpeg") {
 		img, err = jpeg.Decode(fd)
 	} else if strings.EqualFold(ext, ".gif") {
-		if cfg.Animation {
-			gifimg, err := gif.DecodeAll(fd)
-			if err != nil {
-				return fmt.Errorf(`"image/gif".DecodeAll: %w`, err)
-			}
-			return gifDecode(ctx, gifimg, clipping, pen, w)
-		}
-		img, err = gif.Decode(fd)
+		return cfg.drawGif(ctx, fd, clipping, pen, w)
 	} else if strings.EqualFold(ext, ".bmp") {
 		img, err = bmp.Decode(fd)
 	} else if strings.EqualFold(ext, ".ico") {
@@ -158,18 +166,7 @@ func (cfg Config) Run(ctx context.Context, in, out *os.File, args []string) erro
 		}
 	}
 	if cfg.GifFromStdin {
-		if cfg.Animation {
-			gifimg, err := gif.DecodeAll(os.Stdin)
-			if err != nil {
-				return err
-			}
-			return gifDecode(ctx, gifimg, clipping1, pen, out)
-		}
-		img, err := gif.Decode(os.Stdin)
-		if err != nil {
-			return err
-		}
-		return pen.Draw(ctx, img, clipping1(img.Bounds()), out)
+		return cfg.drawGif(ctx, os.Stdin, clipping1, pen, out)
 	}
 	if cfg.PngFromStdin {
 		img, err := png.Decode(os.Stdin)
