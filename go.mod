@@ -5,6 +5,7 @@ go 1.27.3
 require (
 	github.com/biessek/golang-ico v0.0.0-20250805151044-6d8ea19fb761
 	github.com/hymkor/go-windows1x-virtualterminal v0.5.0
+	github.com/hymkor/struct2flag v0.2.0
 	golang.org/x/image v0.47.0
 	golang.org/x/term v0.8.0
 	rsc.io/qr v0.2.0
