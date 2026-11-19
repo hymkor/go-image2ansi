@@ -1,6 +1,8 @@
 Changelog
 =========
 
+- Refactored the command-line application by moving its implementation into the `app` subpackage. (#13)
+
 v0.5.0
 ------
 Nov 19, 2026
