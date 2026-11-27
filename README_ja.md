@@ -95,8 +95,9 @@ image2ansi {オプション...} 画像ファイル名...
   標準入力から JPEG 画像を読み込みます。
 - `-png-from-stdin`  
   標準入力から PNG 画像を読み込みます。
-- `-qr string`  
-  文字列を QR コードとして表示します。
+- ~~`-qr string`~~  
+  ~~文字列を QR コードとして表示します。~~  
+  当機能は [type-qr](https://github.com/hymkor/type-qr) へ移譲しました
 - `-animation`  
   GIF のアニメーションを有効にします (試験実装)
 
