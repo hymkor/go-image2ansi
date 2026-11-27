@@ -8,7 +8,6 @@ require (
 	github.com/hymkor/struct2flag v0.2.0
 	golang.org/x/image v0.47.0
 	golang.org/x/term v0.8.0
-	rsc.io/qr v0.2.0
 )
 
 require (

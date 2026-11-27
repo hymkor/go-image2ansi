@@ -18,7 +18,6 @@ import (
 	"golang.org/x/term"
 
 	"github.com/biessek/golang-ico"
-	"rsc.io/qr"
 
 	"github.com/hymkor/go-windows1x-virtualterminal"
 
@@ -46,8 +45,21 @@ type Config struct {
 	GifFromStdin bool `flag:"gif-from-stdin,Read a GIF image from standard input"`
 	PngFromStdin bool `flag:"png-from-stdin,Read a PNG image from standard input"`
 	JpgFromStdin bool `flag:"jpg-from-stdin,Read a JPEG image from standard input"`
+}
 
-	QR string `flag:"qr,Display the given string as a QR code"`
+func (cfg *Config) drawGif(ctx context.Context, fd io.Reader, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
+	if cfg.Animation {
+		img, err := gif.DecodeAll(fd)
+		if err != nil {
+			return fmt.Errorf(`"image/gif".DecodeAll: %w`, err)
+		}
+		return gifDecode(ctx, img, clipping, pen, w)
+	}
+	img, err := gif.Decode(fd)
+	if err != nil {
+		return err
+	}
+	return pen.Draw(ctx, img, clipping(img.Bounds()), w)
 }
 
 func (cfg *Config) drawFile(ctx context.Context, fname string, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
@@ -67,14 +79,7 @@ func (cfg *Config) drawFile(ctx context.Context, fname string, clipping func(ima
 	} else if strings.EqualFold(ext, ".jpeg") {
 		img, err = jpeg.Decode(fd)
 	} else if strings.EqualFold(ext, ".gif") {
-		if cfg.Animation {
-			gifimg, err := gif.DecodeAll(fd)
-			if err != nil {
-				return fmt.Errorf(`"image/gif".DecodeAll: %w`, err)
-			}
-			return gifDecode(ctx, gifimg, clipping, pen, w)
-		}
-		img, err = gif.Decode(fd)
+		return cfg.drawGif(ctx, fd, clipping, pen, w)
 	} else if strings.EqualFold(ext, ".bmp") {
 		img, err = bmp.Decode(fd)
 	} else if strings.EqualFold(ext, ".ico") {
@@ -158,18 +163,7 @@ func (cfg Config) Run(ctx context.Context, in, out *os.File, args []string) erro
 		}
 	}
 	if cfg.GifFromStdin {
-		if cfg.Animation {
-			gifimg, err := gif.DecodeAll(os.Stdin)
-			if err != nil {
-				return err
-			}
-			return gifDecode(ctx, gifimg, clipping1, pen, out)
-		}
-		img, err := gif.Decode(os.Stdin)
-		if err != nil {
-			return err
-		}
-		return pen.Draw(ctx, img, clipping1(img.Bounds()), out)
+		return cfg.drawGif(ctx, os.Stdin, clipping1, pen, out)
 	}
 	if cfg.PngFromStdin {
 		img, err := png.Decode(os.Stdin)
@@ -184,16 +178,6 @@ func (cfg Config) Run(ctx context.Context, in, out *os.File, args []string) erro
 			return err
 		}
 		return pen.Draw(ctx, img, clipping1(img.Bounds()), out)
-	}
-	if cfg.QR != "" {
-		code, err := qr.Encode(cfg.QR, qr.L)
-		if err != nil {
-			return err
-		}
-		img := code.Image()
-		d := code.Size + 1
-		return pen.Draw(ctx, img, clipping1(
-			image.Rect(0, 0, d, d)), out)
 	}
 	if len(args) <= 0 {
 		return ErrNothingToDo

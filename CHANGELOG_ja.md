@@ -2,6 +2,7 @@ Changelog
 =========
 
 - リファクタリング: CLI としての実装を、サブパッケージ `app` へ移動 (#13)
+- `-qr` オプションを [type-qr](https://github.com/hymkor/type-qr) へ移動した (#14)
 
 v0.5.0
 ------

@@ -96,8 +96,9 @@ image2ansi [options...] image-file...
   Read a JPEG image from standard input
 - `-png-from-stdin`  
   Read a PNG image from standard input
-- `-qr string`  
-  Display the given string as a QR code
+- ~~`-qr string`~~  
+  ~~Display the given string as a QR code~~  
+  Use https://github.com/hymkor/type-qr instead
 - `-animation`  
   Enable experimental animated GIF support
 

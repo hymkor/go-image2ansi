@@ -2,6 +2,7 @@ Changelog
 =========
 
 - Refactored the command-line application by moving its implementation into the `app` subpackage. (#13)
+- Moved `-qr` feature to [type-qr](https://github.com/hymkor/type-qr) (#14)
 
 v0.5.0
 ------
