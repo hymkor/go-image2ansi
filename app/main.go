@@ -18,7 +18,6 @@ import (
 	"golang.org/x/term"
 
 	"github.com/biessek/golang-ico"
-	"rsc.io/qr"
 
 	"github.com/hymkor/go-windows1x-virtualterminal"
 
@@ -46,8 +45,6 @@ type Config struct {
 	GifFromStdin bool `flag:"gif-from-stdin,Read a GIF image from standard input"`
 	PngFromStdin bool `flag:"png-from-stdin,Read a PNG image from standard input"`
 	JpgFromStdin bool `flag:"jpg-from-stdin,Read a JPEG image from standard input"`
-
-	QR string `flag:"qr,Display the given string as a QR code"`
 }
 
 func (cfg *Config) drawGif(ctx context.Context, fd io.Reader, clipping func(image.Rectangle) image.Rectangle, pen *image2ansi.Pen, w io.Writer) error {
@@ -181,16 +178,6 @@ func (cfg Config) Run(ctx context.Context, in, out *os.File, args []string) erro
 			return err
 		}
 		return pen.Draw(ctx, img, clipping1(img.Bounds()), out)
-	}
-	if cfg.QR != "" {
-		code, err := qr.Encode(cfg.QR, qr.L)
-		if err != nil {
-			return err
-		}
-		img := code.Image()
-		d := code.Size + 1
-		return pen.Draw(ctx, img, clipping1(
-			image.Rect(0, 0, d, d)), out)
 	}
 	if len(args) <= 0 {
 		return ErrNothingToDo
